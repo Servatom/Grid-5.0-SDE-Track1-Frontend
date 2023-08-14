@@ -7,23 +7,23 @@ export const navItems: {
 }[] = [
   {
     label: "Men",
-    path: "/men",
+    path: "/shop/men",
   },
   {
     label: "Women",
-    path: "/women",
+    path: "/shop/women",
   },
   {
     label: "Kids",
-    path: "/kids",
+    path: "/shop/kids",
   },
   {
     label: "Accessories",
-    path: "/accessories",
+    path: "/shop/accessories",
   },
   {
     label: "Beauty",
-    path: "/beauty",
+    path: "/shop/beauty",
   },
 ];
 
