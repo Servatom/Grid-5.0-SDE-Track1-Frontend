@@ -18,6 +18,10 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
+        <link
+          rel="icon"
+          href="https://seeklogo.com/images/F/flipkart-logo-3F33927DAA-seeklogo.com.png"
+        />
       </head>
       <body className={inter.className}>{children}</body>
     </html>

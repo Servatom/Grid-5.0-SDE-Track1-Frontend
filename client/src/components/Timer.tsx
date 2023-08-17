@@ -40,7 +40,7 @@ const Timer: React.FC = () => {
   };
 
   return (
-    <div className="w-full flex flex-row justify-center items-center gap-1 font-normal text-md py-6">
+    <div className="w-full flex flex-row justify-center items-center gap-1 font-normal text-md py-6 select-none">
       <span>Sale ends in</span>
       <span className="text-2xl text-pink-500">
         {formatTime(remainingTime).hours}
