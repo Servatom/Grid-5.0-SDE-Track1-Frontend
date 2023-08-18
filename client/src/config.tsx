@@ -31,11 +31,33 @@ export const navOptions: {
   label: string;
   path: string;
   icon: ReactNode;
+  children?: {
+    label: string;
+    path: string;
+  }[];
 }[] = [
   {
     label: "Profile",
     path: "/profile",
     icon: <User2 />,
+    children: [
+      {
+        label: "My Orders",
+        path: "/profile/orders",
+      },
+      {
+        label: "My Account",
+        path: "/profile/account",
+      },
+      {
+        label: "My Addresses",
+        path: "/profile/addresses",
+      },
+      {
+        label: "My Cards",
+        path: "/profile/cards",
+      },
+    ],
   },
   {
     label: "Wishlist",

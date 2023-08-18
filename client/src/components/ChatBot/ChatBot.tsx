@@ -10,7 +10,7 @@ const ChatBot: React.FC = () => {
     <div
       className={`${
         !isOpen ? "min-w-[400px]" : "min-w-[800px]"
-      } transition-all duration-300 drop-shadow-xl shadow-xl bg-white fixed bottom-0 right-2 rounded-md flex flex-col`}
+      } transition-all duration-300 drop-shadow-2xl shadow-xl bg-white fixed bottom-0 right-2 rounded-t-md flex flex-col`}
     >
       <div
         className={`flex flex-row items-center cursor-pointer p-4 ${
