@@ -1,6 +1,8 @@
+import NavBar from "@/components/NavBar";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import ChatBot from "@/components/ChatBot/ChatBot";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +25,11 @@ export default function RootLayout({
           href="https://seeklogo.com/images/F/flipkart-logo-3F33927DAA-seeklogo.com.png"
         />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <NavBar />
+        {children}
+        <ChatBot />
+      </body>
     </html>
   );
 }
