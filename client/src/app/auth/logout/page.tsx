@@ -6,7 +6,7 @@ import { useContext, useEffect } from "react";
 const Logout = () => {
   const authCtx = useContext(AuthContext);
   useEffect(() => {
-    if (authCtx.isLoggedIn) {
+    if (!authCtx.isLoggedIn) {
       window.location.href = "/";
     } else {
       authCtx.logout();
@@ -15,3 +15,5 @@ const Logout = () => {
   }, [authCtx]);
   return <div></div>;
 };
+
+export default Logout;

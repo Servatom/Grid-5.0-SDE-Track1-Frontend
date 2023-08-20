@@ -13,3 +13,13 @@ export interface IProduct {
   description: string;
   average_rating: number;
 }
+
+export interface ISUggestedProduct {
+  current_price: number;
+  discounted: boolean;
+  link: string;
+  name: string;
+  original_price: number;
+  query_url: string;
+  thumbnail: string;
+}

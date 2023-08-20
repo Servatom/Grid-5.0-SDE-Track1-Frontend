@@ -1,6 +1,10 @@
 "use client";
+import { axiosPortkey } from "@/axios";
+import AuthContext from "@/store/auth-context";
 import { Mic, SendHorizontal } from "lucide-react";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useContext, useEffect, useRef, useState } from "react";
+import SuggestedProduct from "./SuggestedProduct";
+import { ISUggestedProduct } from "@/types";
 
 let speech: any;
 if ((window as any).webkitSpeechRecognition) {
@@ -13,8 +17,13 @@ if ((window as any).webkitSpeechRecognition) {
 }
 
 const Chat: React.FC = () => {
+  const authCtx = useContext(AuthContext);
   const [newMessage, setNewMessage] = useState<string>("");
   const [isListening, setIsListening] = useState(false);
+  const [convoId, setConvoId] = useState<string>("");
+  const [suggestedProducts, setSuggestedProducts] = useState<
+    ISUggestedProduct[]
+  >([]);
   const chatRef = useRef<HTMLDivElement>(null);
   const listen = () => {
     if (isListening) {
@@ -24,6 +33,24 @@ const Chat: React.FC = () => {
     }
     setIsListening(!isListening);
   };
+
+  const initConvo = async () => {
+    const convo = await axiosPortkey
+      .get("/init", {
+        headers: {
+          Authorization: `Bearer ${authCtx.token}`,
+        },
+      })
+      .then((res) => res.data);
+    setConvoId(convo.conversation_id);
+  };
+
+  useEffect(() => {
+    if (!authCtx.isLoggedIn) return;
+
+    initConvo();
+  }, []);
+
   useEffect(() => {
     //handle if the browser does not support the Speech API
     if (!speech) {
@@ -35,6 +62,7 @@ const Chat: React.FC = () => {
       setIsListening(false);
     };
   }, [isListening]);
+
   const [chat, setChat] = useState<
     {
       message: string;
@@ -45,53 +73,92 @@ const Chat: React.FC = () => {
       message: "Hi, I'm your personal stylist. What can I do for you?",
       from: "bot",
     },
-    {
-      message: "I need an outfit for a party",
-      from: "user",
-    },
-    {
-      message: "Sure, I can help you with that. What's the occasion?",
-      from: "bot",
-    },
-    {
-      message: "It's a birthday party",
-      from: "user",
-    },
-    {
-      message: "Awesome! What's your budget?",
-      from: "bot",
-    },
-    {
-      message: "My budget is $100",
-      from: "user",
-    },
-    {
-      message: "That's a good budget. Do you have any color preferences?",
-      from: "bot",
-    },
-    {
-      message: "I like blue",
-      from: "user",
-    },
-    {
-      message: "Great! I'll get back to you soon",
-      from: "bot",
-    },
+    // {
+    //   message: "I need an outfit for a party",
+    //   from: "user",
+    // },
+    // {
+    //   message: "Sure, I can help you with that. What's the occasion?",
+    //   from: "bot",
+    // },
+    // {
+    //   message: "It's a birthday party",
+    //   from: "user",
+    // },
+    // {
+    //   message: "Awesome! What's your budget?",
+    //   from: "bot",
+    // },
+    // {
+    //   message: "My budget is $100",
+    //   from: "user",
+    // },
+    // {
+    //   message: "That's a good budget. Do you have any color preferences?",
+    //   from: "bot",
+    // },
+    // {
+    //   message: "I like blue",
+    //   from: "user",
+    // },
+    // {
+    //   message: "Great! I'll get back to you soon",
+    //   from: "bot",
+    // },
   ]);
 
-  const onSubmitChat = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmitChat = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setChat((prev) => {
-      return [
-        ...prev,
+    const newResp = await axiosPortkey
+      .post(
+        `/talk/${convoId}`,
         {
-          from: "user",
-          message: newMessage,
+          conversation: [{ role: "user", content: newMessage }],
         },
-      ];
-    });
-    setNewMessage("");
-    // scroll to bottom
+        {
+          headers: {
+            Authorization: `Bearer ${authCtx.token}`,
+          },
+        }
+      )
+      .then((res) => res.data);
+
+    if (newResp.bot_reply_type === "text") {
+      if (suggestedProducts.length > 0) {
+        setSuggestedProducts([]);
+      }
+      setChat((prev) => {
+        return [
+          ...prev,
+          {
+            from: "user",
+            message: newMessage,
+          },
+          {
+            from: "bot",
+            message: newResp.bot_reply,
+          },
+        ];
+      });
+      setNewMessage("");
+    } else if (newResp.bot_reply_type === "search_results") {
+      setNewMessage("");
+      setSuggestedProducts(newResp.search_results);
+      console.log(newResp.search_results);
+      setChat((prev) => {
+        return [
+          ...prev,
+          {
+            from: "user",
+            message: newMessage,
+          },
+          {
+            from: "bot",
+            message: "Sure! Found some relevant products:",
+          },
+        ];
+      });
+    }
   };
 
   useEffect(() => {
@@ -126,6 +193,13 @@ const Chat: React.FC = () => {
             </p>
           </div>
         ))}
+        {suggestedProducts.length > 0 && (
+          <div className="flex flex-row gap-3 h-max overflow-x-scroll">
+            {suggestedProducts.map((product, index) => (
+              <SuggestedProduct key={index} {...product} />
+            ))}
+          </div>
+        )}
       </div>
       <form
         onSubmit={onSubmitChat}
@@ -144,17 +218,26 @@ const Chat: React.FC = () => {
           />
         </div>
         <input
-          className="outline-none w-full bg-transparent"
+          className="outline-none w-full bg-transparent disabled:cursor-not-allowed"
           type="text"
           placeholder={
-            isListening ? "Listening..." : "Ask me for an outfit suggestion..."
+            !authCtx.isLoggedIn
+              ? "Please login to chat with the stylist"
+              : isListening
+              ? "Listening..."
+              : "Ask me for an outfit suggestion..."
           }
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          disabled={!authCtx.isLoggedIn}
         />
-        <SendHorizontal
-          className={`${newMessage.length > 0 ? "opacity-75" : "opacity-30"} `}
-        />
+        <button type="submit">
+          <SendHorizontal
+            className={`${
+              newMessage.length > 0 ? "opacity-75" : "opacity-30"
+            } `}
+          />
+        </button>
       </form>
     </div>
   );
