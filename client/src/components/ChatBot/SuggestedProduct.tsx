@@ -3,7 +3,7 @@ import { ISUggestedProduct } from "@/types";
 const SuggestedProduct: React.FC<ISUggestedProduct> = (product) => {
   const { current_price, link, name, thumbnail } = product;
   return (
-    <a href={link}>
+    <a href={link} target="_blank" rel="noreferrer">
       <div className="flex flex-col w-40 h-60 p-2 gap-2 rounded-sm shadow-lg">
         <img
           src={thumbnail}

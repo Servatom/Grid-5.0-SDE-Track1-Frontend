@@ -73,38 +73,6 @@ const Chat: React.FC = () => {
       message: "Hi, I'm your personal stylist. What can I do for you?",
       from: "bot",
     },
-    // {
-    //   message: "I need an outfit for a party",
-    //   from: "user",
-    // },
-    // {
-    //   message: "Sure, I can help you with that. What's the occasion?",
-    //   from: "bot",
-    // },
-    // {
-    //   message: "It's a birthday party",
-    //   from: "user",
-    // },
-    // {
-    //   message: "Awesome! What's your budget?",
-    //   from: "bot",
-    // },
-    // {
-    //   message: "My budget is $100",
-    //   from: "user",
-    // },
-    // {
-    //   message: "That's a good budget. Do you have any color preferences?",
-    //   from: "bot",
-    // },
-    // {
-    //   message: "I like blue",
-    //   from: "user",
-    // },
-    // {
-    //   message: "Great! I'll get back to you soon",
-    //   from: "bot",
-    // },
   ]);
 
   const onSubmitChat = async (e: FormEvent<HTMLFormElement>) => {
@@ -194,7 +162,7 @@ const Chat: React.FC = () => {
           </div>
         ))}
         {suggestedProducts.length > 0 && (
-          <div className="flex flex-row gap-3 h-max overflow-x-scroll">
+          <div className="flex flex-row gap-3 min-h-[250px] overflow-x-scroll">
             {suggestedProducts.map((product, index) => (
               <SuggestedProduct key={index} {...product} />
             ))}
