@@ -7,7 +7,7 @@ import SuggestedProduct from "./SuggestedProduct";
 import { ISUggestedProduct } from "@/types";
 
 let speech: any;
-if ((window as any).webkitSpeechRecognition) {
+if (typeof window !== "undefined" && (window as any).webkitSpeechRecognition) {
   // eslint-disable-next-line
   const SpeechRecognition = (window as any).webkitSpeechRecognition;
   speech = new SpeechRecognition();
