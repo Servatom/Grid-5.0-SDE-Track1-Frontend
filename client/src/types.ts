@@ -11,5 +11,5 @@ export interface IProduct {
   size: string;
   image: string;
   description: string;
-  avgRating: number;
+  average_rating: number;
 }

@@ -17,12 +17,12 @@ const OrderItem: React.FC<{
         <div className="flex flex-row gap-6 text-sm">
           <h3 className="font-medium">₹{product.price}</h3>
           <h3 className="font-medium">Qty: 1</h3>
-          <h3 className="font-medium">Size: {product.size}</h3>
+          <h3 className="font-medium">Size: M</h3>
         </div>
         <p className="text-xs opacity-50">{product.description}</p>
         <div className="flex flex-row justify-between items-center mt-auto">
           <span className="text-xs opacity-60 ">
-            Average rating: {product.avgRating}/5
+            Average rating: {product.average_rating}/5
           </span>
           <button className="px-4 py-2 bg-pink-500 text-white font-medium text-sm rounded-sm">
             BUY AGAIN
