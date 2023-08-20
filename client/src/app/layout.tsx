@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import ChatBot from "@/components/ChatBot/ChatBot";
+import { AuthContextProvider } from "@/store/auth-context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,9 +27,11 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <NavBar />
-        {children}
-        <ChatBot />
+        <AuthContextProvider>
+          <NavBar />
+          {children}
+          <ChatBot />
+        </AuthContextProvider>
       </body>
     </html>
   );
